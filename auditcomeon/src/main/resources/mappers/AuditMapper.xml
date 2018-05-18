@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="cn.sxu.auditcomeon.mapper.AuditMapper">
+	<!-- 根据登陆userid 查询所有的二审项目 -->
+	<select id="UserAudit2" resultType="cn.sxu.auditcomeon.bean.Audit">
+		select a.projectid projectid,a.auditorid auditorid,a.auditor auditor,a.price_total priceTotal,a.price_decrease priceDecrease,a.rate_decrease rateDecrease,
+		a.date_send dateSend,a.date_return dateReturn from audit_1 a,projectlist p,audit_2 a2 where
+		 p.id=a.projectid and a.projectid=a2.projectid and a.auditorid=#{id} and p.depart_audit3_departid is null 
+		 and a2.date_send is null and p.depart_audit1_departid is not null and p.depart_audit2_departid is not null		
+	</select>
+	<select id="UserAudit3" resultType="cn.sxu.auditcomeon.bean.Audit">
+		select a.projectid projectid,a.auditorid auditorid,a.auditor auditor,a.price_total priceTotal,a.price_decrease priceDecrease,a.rate_decrease rateDecrease,
+		a.date_send dateSend,a.date_return dateReturn from audit_2 a,projectlist p,audit_3 a2 where
+		 p.id=a.projectid and a.projectid=a2.projectid and a.auditorid=#{id} and p.depart_audit3_departid is not null 
+		 and a2.date_send is null and p.depart_audit1_departid is not null and p.depart_audit2_departid is not null		
+	</select>
+	<!-- 添加用户 -->	
+	<insert id="insertAudit"  parameterType="cn.sxu.auditcomeon.bean.Audit">
+		insert into audit_1 (projectid,auditorid,auditor) values(#{projectid},#{auditorid},#{auditor})
+	</insert> 
+	<insert id="insertAudit2"  parameterType="cn.sxu.auditcomeon.bean.Audit">
+		insert into audit_2 (projectid,auditorid,auditor) values(#{projectid},#{auditorid},#{auditor})
+	</insert> 
+	<insert id="insertAudit3"  parameterType="cn.sxu.auditcomeon.bean.Audit">
+		insert into audit_3 (projectid,auditorid,auditor) values(#{projectid},#{auditorid},#{auditor})
+	</insert> 
+	<update id="updateAudit1" parameterType="cn.sxu.auditcomeon.bean.Audit">
+		update audit_1 set
+		price_total=#{priceTotal},price_decrease=#{priceDecrease},rate_decrease=#{rateDecrease},date_send=#{dateSend} ,date_return=#{dateReturn}
+		where	projectid=#{projectid}
+	</update>
+	<update id="updateAudit2" parameterType="cn.sxu.auditcomeon.bean.Audit">
+		update audit_2 set
+		price_total=#{priceTotal},price_decrease=#{priceDecrease},rate_decrease=#{rateDecrease},date_send=#{dateSend} ,date_return=#{dateReturn}
+		where	projectid=#{projectid}
+	</update>
+	<update id="updateAudit3" parameterType="cn.sxu.auditcomeon.bean.Audit">
+		update audit_3 set
+		price_total=#{priceTotal},price_decrease=#{priceDecrease},rate_decrease=#{rateDecrease},date_send=#{dateSend} ,date_return=#{dateReturn}
+		where	projectid=#{projectid}
+	</update>
+	<select id="findByPid" resultType="cn.sxu.auditcomeon.bean.Audit">
+		select projectid,auditorid,auditor,price_total priceTotal,price_decrease priceDecrease,rate_decrease rateDecrease,
+		date_send dateSend,date_return dateReturn from audit_1 where projectid=#{id}
+	</select>
+	<select id="findByPid2" resultType="cn.sxu.auditcomeon.bean.Audit">
+		select projectid,auditorid,auditor,price_total priceTotal,price_decrease priceDecrease,rate_decrease rateDecrease,
+		date_send dateSend,date_return dateReturn from audit_2 where projectid=#{id}
+	</select>
+	<select id="findByPid3" resultType="cn.sxu.auditcomeon.bean.Audit">
+		select projectid,auditorid,auditor,price_total priceTotal,price_decrease priceDecrease,rate_decrease rateDecrease,
+		date_send dateSend,date_return dateReturn from audit_3 where projectid=#{id}
+	</select>
+	<select id="showAudit1" resultType="cn.sxu.auditcomeon.bean.Audit">
+		select a.projectid projectid,a.auditorid auditorid,a.auditor auditor,a.price_total priceTotal,a.price_decrease priceDecrease,a.rate_decrease rateDecrease,
+		a.date_send dateSend,a.date_return dateReturn
+		 from audit_1 a,projectlist p where a.projectid=p.id and p.depart_audit2_departid is null and a.price_total is not null and
+		  p.depart_audit1_departid is not null and p.depart_dest=(select DISTINCT d.name from userlist u,departmentlist d where d.id=#{belong} )
+	</select>
+	<select id="showAudit2" resultType="cn.sxu.auditcomeon.bean.Audit">
+		select a.projectid projectid,a.auditorid auditorid,a.auditor auditor,a.price_total priceTotal,a.price_decrease priceDecrease,a.rate_decrease rateDecrease,
+		a.date_send dateSend,a.date_return dateReturn
+		 from audit_2 a,projectlist p where a.projectid=p.id and p.depart_audit3_departid is null and a.price_total is not null and
+		  p.depart_audit2_departid is not null and p.depart_dest=(select DISTINCT d.name from userlist u,departmentlist d where d.id=#{belong} )
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

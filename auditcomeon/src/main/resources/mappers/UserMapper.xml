@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="cn.sxu.auditcomeon.mapper.UserMapper">
+	<!-- 添加用户 -->
+	<insert id="insert" parameterType="cn.sxu.auditcomeon.bean.User">
+		insert into userlist (username,password,name,typename,usergrant,belong)values(
+			#{username},#{password},#{name},#{typename},#{usergrant},#{belong}
+		)
+	</insert>
+	<!-- 根据真实名字查询id，belong -->
+	<select id="showIdBelong" resultType="cn.sxu.auditcomeon.bean.User">
+		select id,belong from userlist where name=#{name} and usergrant=3
+	</select>
+	<!--根据用户名查询用户列表  -->
+	<select id="selectByUsername" resultType="cn.sxu.auditcomeon.bean.User">
+		select id,username,password,name,typename,usergrant,belong from userlist where username=#{username}
+	</select>
+	<!-- 根据用户名查找id -->
+	<select id="selectId" resultType="java.lang.Integer">
+		select id from userlist where username=#{id}
+	</select>
+	<!-- 查找所有审计处用户 -->
+	<select id="selectName" resultType="java.lang.String">
+		select DISTINCT d.name from departmentlist d,userlist u where u.belong=d.id and d.departmenttypeid=2
+	</select>
+	<!-- 根据id查找用户 -->
+	<select id="findById" parameterType="java.lang.Integer" resultType="cn.sxu.auditcomeon.bean.User">
+		select *
+		from userlist where id=#{id1}
+	</select>
+	<!-- 更改密码 -->
+	<update id="updatePassword" parameterType="cn.sxu.auditcomeon.bean.User">
+		update userlist set
+		password=#{password} where	 id=#{id}
+	</update>
+	
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="cn.sxu.auditcomeon.mapper.ProjectMapper">
+	<update id="updateAudit1Id" parameterType="cn.sxu.auditcomeon.bean.Project">
+		update projectlist set
+		depart_audit1_departid=#{departAudit1Depatid}    where	 id=#{id} 
+	</update>
+	<update id="updateAudit2Id" parameterType="cn.sxu.auditcomeon.bean.Project">
+		update projectlist set
+		depart_audit2_departid=#{departAudit2Depatid}    where	 id=#{id} 
+	</update>
+	<update id="updateAudit3Id" parameterType="cn.sxu.auditcomeon.bean.Project">
+		update projectlist set
+		depart_audit3_departid=#{departAudit3Depatid}    where	 id=#{id} 
+	</update>
+	
+	
+	<select id="findById" resultType="cn.sxu.auditcomeon.bean.Project">
+		select id,name,year,obtaindate,depart_dest departDest,
+		depart_construct departConstruct,price_report priceReport,price_audit priceAudit,depart_constructid departConstructid  from projectlist
+		where id=#{id}
+	</select >
+
+	 <insert id="insert" parameterType="cn.sxu.auditcomeon.bean.Project">
+		insert into projectlist(id,name,year,obtaindate,depart_dest,
+		depart_construct,price_report,price_audit,depart_constructid)
+		 values (#{id},#{name},#{year},#{obtaindate},#{departDest},#{departConstruct},#{priceReport},#{priceAudit},#{departConstructid})
+	</insert>
+	<!--显示当前施工单位的所有项目  -->
+	<select id="selectById" resultType="cn.sxu.auditcomeon.bean.Project">
+		select id,name,year,obtaindate,depart_dest departDest,
+		depart_construct departConstruct,price_report priceReport,price_audit priceAudit,depart_constructid departConstructid from projectlist
+		where depart_constructid=#{id}
+	</select >
+	<!--删除项目  -->
+	<delete id="delPro">
+		delete from projectlist where id=#{id}
+	</delete> 
+	<!-- 根据审核单位，查询所有项目 -->
+	<select id="showAll" resultType="cn.sxu.auditcomeon.bean.Project" >
+		select id,name,year,obtaindate,depart_dest departDest,
+		depart_construct departConstruct,price_report priceReport,price_audit priceAudit,depart_constructid departConstructid from projectlist where
+		 depart_dest=(select DISTINCT d.name from departmentlist d where d.id=#{belong} )
+	</select>
+	<!-- 根据审核单位一审，查询所有项目 -->
+	<select id="selectAudit1" resultType="cn.sxu.auditcomeon.bean.Project" >
+		select id,name,year,obtaindate,depart_dest departDest,
+		depart_construct departConstruct,price_report priceReport,price_audit priceAudit,depart_constructid departConstructid from projectlist where
+		 depart_dest=(select DISTINCT d.name from userlist u,departmentlist d where d.id=#{belong} ) and depart_audit1_departid is null
+	</select>
+	<!-- 根据登陆userid 查询所有的一审项目 -->
+	<select id="UserAudit1" resultType="cn.sxu.auditcomeon.bean.Project">
+		select p.id,p.name,p.year,p.price_report priceReport,p.price_audit priceAudit from audit_1 a,projectlist p where
+		 p.id=a.projectid and a.auditorid=#{id} and p.depart_audit2_departid is null and a.date_send is null
+		
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
